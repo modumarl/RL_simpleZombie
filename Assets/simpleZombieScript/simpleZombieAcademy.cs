@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class simpleZombieAcademy : Academy
 {
-    /*
+    // TODO : move objList to GroundClass
     [HideInInspector]
-    public GameObject[] BotAgentList;
+    public GameObject[] playerAgentList;
 
     [HideInInspector]
-    public GameObject[] BotEnemyList;
-    */
+    public GameObject[] zombieList;
+    
 
 
     [HideInInspector]
