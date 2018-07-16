@@ -26,3 +26,13 @@ public enum ObjectType
 
 
 }
+
+//////////////////////////////////////
+
+public enum AgentState
+{
+    normal,
+    shotWaiting,
+    dead,
+    
+}

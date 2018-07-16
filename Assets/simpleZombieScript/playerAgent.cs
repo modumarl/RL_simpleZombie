@@ -18,11 +18,14 @@ public class playerAgent : Agent
     // playerType 
     // *******************
 
-
+    AgentState _curState;
     float _moveSpeed;
+    float _turnSpeed;
 
     float _shotCoolTime;
+    float _prevShotTime;
     int _hp;
+
 
 
 
@@ -56,7 +59,57 @@ public class playerAgent : Agent
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
+        if (_hp < 1)
+            return;
 
+        Vector3 dirToGo = Vector3.zero;
+        Vector3 rotateDir = Vector3.zero;
+        bool shootCommand = false;
+
+
+        if (brain.brainParameters.vectorActionSpaceType == SpaceType.continuous)
+        {
+            dirToGo = transform.forward * Mathf.Clamp(vectorAction[0], -1f, 1f);
+            rotateDir = transform.up * Mathf.Clamp(vectorAction[1], -1f, 1f);
+            shootCommand = Mathf.Clamp(vectorAction[2], 0f, 1f) > 0.3f;
+        }
+        else
+        {
+            switch ((int)(vectorAction[0]))
+            {
+                case 1:
+                    dirToGo = transform.forward;
+                    break;
+                case 2:
+                    shootCommand = true;
+                    break;
+                case 3:
+                    rotateDir = -transform.up;
+                    break;
+                case 4:
+                    rotateDir = transform.up;
+                    break;
+            }
+        }
+
+        agentRB.AddForce(dirToGo * _moveSpeed, ForceMode.Force);
+        transform.Rotate(rotateDir, Time.fixedDeltaTime * _turnSpeed);
+
+
+        if (shootCommand)
+        {
+            if (_curState == AgentState.normal)
+            {
+
+
+                /*
+                shootAction.ShootMissile(_curTeam, _shootPower, transform.position + transform.forward * missileInitPivot, transform.forward);
+                _curState = AgentState.shotWaiting;
+                _shootingTime = Time.time;
+
+                */
+            }
+        }
     }
 
     public override void AgentReset()
@@ -84,6 +137,22 @@ public class playerAgent : Agent
 
 
     ////////////////////////////////////////////////////////////////////////////////
+
+
+    void SetState()
+    {
+        //Time.time 가지고 setTime
+        if (_curState == AgentState.shotWaiting)
+        {
+            if (Time.time > _prevShotTime + _shotCoolTime)
+            {
+                _curState = AgentState.normal;
+            }
+        }
+
+    }
+
+
 
     void Shot()
     {
