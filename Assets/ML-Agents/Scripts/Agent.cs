@@ -515,6 +515,8 @@ public abstract class Agent : MonoBehaviour
         {
             if (info.vectorObservation.Count != param.vectorObservationSize)
             {
+                Debug.LogWarning("Vec Count = " + info.vectorObservation.Count);
+
                 throw new UnityAgentsException(string.Format(
                     "Vector Observation size mismatch between continuous " +
                     "agent {0} and brain {1}. " +

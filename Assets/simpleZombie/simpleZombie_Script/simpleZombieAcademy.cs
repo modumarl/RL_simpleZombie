@@ -31,6 +31,9 @@ public class simpleZombieAcademy : Academy
 
     public override void AcademyReset()
     {
+
+        /*
+
         //groundList = FindObjectsOfType<zombieGround>();
         //Debug.Log("IN  AcademyReset : BotAgentCount = " + BotAgentList.Length);
 
@@ -44,7 +47,9 @@ public class simpleZombieAcademy : Academy
 
         totalScore = 0;
 
-        ObjectManager.instance.FreeAllObj(ObjectType.missile);
+        //ObjectManager.instance.FreeAllObj(ObjectType.missile);
+
+        */
     }
 
     public override void AcademyStep()

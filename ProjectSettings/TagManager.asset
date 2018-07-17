@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - wall
+  - BotEnemy
+  - BotAgent
+  - agent
+  - banana
+  - badBanana
+  - zombie
+  - playerAgent
   layers:
   - Default
   - TransparentFX

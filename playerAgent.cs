@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class playerAgent : Agent
 {
-    RayPerception _rayPercept;
-    Rigidbody agentRB;
+    public InfoScript infoScript;
 
-    // need?
-    List<GameObject> nearZombieList = new List<GameObject>();
-
-
+    List<GameObject> _nearZombieList = new List<GameObject>();
+    GameObject _targetZombie; 
 
     // ****** TODO ******
     // heading Vector
@@ -18,34 +15,44 @@ public class playerAgent : Agent
     // playerType 
     // *******************
 
+    RayPerception _rayPercept;
+    Rigidbody agentRB;
     AgentState _curState;
-    float _moveSpeed;
-    float _turnSpeed;
-
     float _shotCoolTime;
     float _prevShotTime;
-    int _hp;
+    float _hp;
 
 
 
 
+    //////*imported value*//////
+    float _moveSpeed;
+    float _turnSpeed;
+    float _rayDistance;
+    float _hitDmg;
+    float[] _rayAngle;
+    string[] _detectableObjects = { "zombie", "wall", "playerAgent", "obstacle" };
+    ///////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
 
     public override void InitializeAgent()
     {
+        Debug.LogWarning("INIT CALLED");
+
         base.InitializeAgent();
 
         _rayPercept = GetComponent<RayPerception>();
+        agentRB = GetComponent<Rigidbody>();
 
-        //agentRB = GetComponent<Rigidbody>();
-        //shootAction = GetComponent<ShootAction>();
-        //_shootPower = generalInfo.shotPower;
-        //_dpsCoolTime = generalInfo.dpsCoolTime;
-        //_attackBonus = generalInfo.attackBonus;
-        //_turnSpeed = generalInfo.turnSpeed;
-        //_moveSpeed = generalInfo.moveSpeed;
-        //_curTeam = Teams.Team_agent;
+        _moveSpeed = infoScript.moveSpeed_playerAgent;
+        _turnSpeed = infoScript.turnSpeed_playerAgent;
+        _rayDistance = infoScript.rayDistacne_agent;
+        _hitDmg = infoScript.dmg_playerAgent;
+        _rayAngle = infoScript.rayAngle_agent;
+        _hp = infoScript.fullHp_playerAgent;
+
+        Debug.LogWarning(_rayAngle);
 
         ResetAgentValue();
     }
@@ -54,13 +61,32 @@ public class playerAgent : Agent
 
     public override void CollectObservations()
     {
+        Debug.LogWarning("[[[[ collect CALLED");
+
+
+        AddVectorObs(_rayPercept.Perceive(_rayDistance, _rayAngle, _detectableObjects, 0f, 0f));
+        Vector3 localVelocity = transform.InverseTransformDirection(agentRB.velocity);
+        AddVectorObs(localVelocity.x);
+        AddVectorObs(localVelocity.z);
+        AddVectorObs(System.Convert.ToInt32(_curState));
+        AddVectorObs(Time.time - _prevShotTime);
+        AddVectorObs(_hp);
+
+        //todo 
+        // nearZombieList 관련한 정보값
+        AddVectorObs(_nearZombieList.Count);
+        
+        //hp가 일정치 이하인 좀비의 카운트?
 
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        if (_hp < 1)
+        
+        if (_curState == AgentState.dead)
             return;
+
+        // 죽은후 obs 정보나 네트워크 보낼 정보는 어떻게...?
 
         Vector3 dirToGo = Vector3.zero;
         Vector3 rotateDir = Vector3.zero;
@@ -130,13 +156,42 @@ public class playerAgent : Agent
 
     }
 
-    void Update()
-    {
 
-    }
 
 
     ////////////////////////////////////////////////////////////////////////////////
+
+    public void AttackByZombie(int inputDmg)
+    {
+        // TODO : SendReward
+
+        UpdateHp(inputDmg);
+    }
+
+
+
+
+
+
+    void UpdateHp(int inputDmg)
+    {
+        if(_curState == AgentState.dead)
+        {
+            return;
+        }
+
+
+        if(_hp > inputDmg)
+        {
+            _hp -= inputDmg;
+        }
+
+        else
+        {
+            _hp = 0;
+            _curState = AgentState.dead;
+        }
+    }
 
 
     void SetState()
@@ -152,13 +207,25 @@ public class playerAgent : Agent
 
     }
 
+    void SelectShotTarget()
+    {
+        //set targetZombie
 
+        // 일단은 제일 hp가 적은 좀비위주로 함
+
+
+
+
+    }
 
     void Shot()
     {
+
+
         // zombie에게 shot
 
 
+        // TODO : particle mgr 요청
 
     }
 
