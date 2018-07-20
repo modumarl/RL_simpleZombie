@@ -6,8 +6,9 @@ public class playerAgent : Agent
 {
     public InfoScript infoScript;
 
-    List<GameObject> _nearZombieList = new List<GameObject>();
-    GameObject _targetZombie; 
+    List<GameObject> _perceiveZombieList = new List<GameObject>();
+    GameObject _targetZombie_nearest;
+    GameObject _targetZombie_minimumHP;
 
     // ****** TODO ******
     // heading Vector
@@ -21,6 +22,10 @@ public class playerAgent : Agent
     float _shotCoolTime;
     float _prevShotTime;
     float _hp;
+    public float hp
+    {
+        get { return _hp; }
+    }
 
 
 
@@ -66,6 +71,15 @@ public class playerAgent : Agent
         //Debug.Log(_rayAngle);
 
 
+        PerceiveZombie();
+        if(_perceiveZombieList.Count !=0)
+        {
+            SetTarget();
+        }
+
+
+        /////////////
+
         AddVectorObs(_rayPercept.Perceive(_rayDistance, _rayAngle, _detectableObjects, 0f, 0f));
         Vector3 localVelocity = transform.InverseTransformDirection(agentRB.velocity);
         AddVectorObs(localVelocity.x);
@@ -76,10 +90,11 @@ public class playerAgent : Agent
 
         //todo 
         // nearZombieList 관련한 정보값
-        AddVectorObs(_nearZombieList.Count);
-        
+        AddVectorObs(_perceiveZombieList.Count);
+
         //hp가 일정치 이하인 좀비의 카운트?
 
+    
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
@@ -158,7 +173,55 @@ public class playerAgent : Agent
 
     }
 
+    void PerceiveZombie()
+    {
+        _perceiveZombieList = _rayPercept.PerceiveObjectList(_rayDistance, _rayAngle, "zombie", 0f, 0f);
 
+        //Debug.LogWarning("listCount = " + _perceiveZombieList.Count);
+        //for (int i = 0; i < _perceiveZombieList.Count; ++i)
+        //{
+        //    Debug.Log(_perceiveZombieList[i].name + " " + _perceiveZombieList[i].GetInstanceID());
+        //}
+    }
+    void SetTarget()
+    {
+        if(_perceiveZombieList.Count == 0)
+        {
+            return;
+        }
+
+        _targetZombie_minimumHP = _perceiveZombieList[0];
+        _targetZombie_nearest = _perceiveZombieList[0];
+
+        var minHp = _targetZombie_minimumHP.GetComponent<enemyZombie>().hp;
+        var minDist = Vector3.Distance(_targetZombie_nearest.transform.position, transform.position);
+
+        for (int i=0; i<_perceiveZombieList.Count; ++i)
+        {
+            var thisZombieHp = _perceiveZombieList[i].GetComponent<enemyZombie>().hp;
+            if (minHp > thisZombieHp)
+            {
+                _targetZombie_minimumHP = _perceiveZombieList[i];
+                minHp = thisZombieHp;
+            }
+
+
+            float thisZombieDist = Vector3.Distance(_perceiveZombieList[i].transform.position, transform.position);
+            if (minDist > thisZombieDist)
+            {
+                _targetZombie_nearest = _perceiveZombieList[i];
+                minDist = thisZombieDist;
+            }
+        }
+    }
+
+
+    /*
+    private void FixedUpdate()
+    {
+
+    }
+    */
 
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -167,14 +230,10 @@ public class playerAgent : Agent
     {
         // TODO : SendReward
 
+       
+
         UpdateHp(inputDmg);
     }
-
-
-
-
-
-
     void UpdateHp(int inputDmg)
     {
         if(_curState == AgentState.dead)
@@ -209,25 +268,42 @@ public class playerAgent : Agent
 
     }
 
-    void SelectShotTarget()
+    void Shot(bool shotMinHP)
     {
-        //set targetZombie
-
-        // 일단은 제일 hp가 적은 좀비위주로 함
-
-
-
-
-    }
-
-    void Shot()
-    {
-
-
         // zombie에게 shot
 
 
+        GameObject targetZombie = null ;
+
+        
+
+        //set Target
+        if (shotMinHP)
+        {
+
+        }
+
+        else
+        {
+
+        }
+
+        // TODO : Target ZOmbie가 null 일떄 처리...
+
+        //TODO : Do DMG
+        targetZombie.GetComponent<enemyZombie>().UpdateDamage(_hitDmg);
+
+        //TODO setReward
+
+
+        //TODO : manage DPS;
+
         // TODO : particle mgr 요청
+
+
+
+
+        // output Action이 좀비 때려라 여도 어택을 하면안됨
 
     }
 

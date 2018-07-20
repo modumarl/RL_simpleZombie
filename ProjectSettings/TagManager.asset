@@ -5,13 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - wall
-  - BotEnemy
-  - BotAgent
+  - zombie
+  - playerAgent
+  - ground
   - agent
   - banana
   - badBanana
-  - zombie
-  - playerAgent
   layers:
   - Default
   - TransparentFX
@@ -23,10 +22,10 @@ TagManager:
   - 
   - PostProcessing
   - 
-  - 
-  - 
-  - 
-  - 
+  - zombie
+  - playerAgent
+  - ground
+  - wall
   - 
   - 
   - 

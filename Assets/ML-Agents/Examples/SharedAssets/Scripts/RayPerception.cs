@@ -8,6 +8,8 @@ using UnityEngine;
 public class RayPerception : MonoBehaviour
 {
     List<float> perceptionBuffer = new List<float>();
+    List<GameObject> perceptionObjList = new List<GameObject>();
+
     Vector3 endPosition;
     RaycastHit hit;
     /// <summary>
@@ -59,6 +61,63 @@ public class RayPerception : MonoBehaviour
         }
         return perceptionBuffer;
     }
+
+    public List<GameObject> PerceiveObjectList(float rayDistance,
+                     float[] rayAngles, string detectObjLayerName,
+                      float startOffset, float endOffset)
+    {
+        perceptionObjList.Clear();
+        foreach (float angle in rayAngles)
+        {
+            endPosition = transform.TransformDirection(
+                PolarToCartesian(rayDistance, angle));
+            endPosition.y = endOffset;
+            if (Application.isEditor)
+            {
+                Debug.DrawRay(transform.position + new Vector3(0f, startOffset, 0f),
+              endPosition, Color.black, 0.01f, true);
+            }
+
+            if (Physics.SphereCast(transform.position +
+                                   new Vector3(0f, startOffset, 0f), 0.5f,
+                                   endPosition, out hit, rayDistance))
+            {
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer(detectObjLayerName))
+                {
+
+                    //List 돌면서 검색해서 그 오브젝트인지 확인
+
+                    bool isSame = false;
+
+                    for(int i=0;i< perceptionObjList.Count; ++i)
+                    {
+                        if(hit.collider.gameObject.GetInstanceID() == perceptionObjList[i].GetInstanceID())
+                        {
+                            isSame = true;
+                        }
+                    }
+                    
+                    if(isSame == false)
+                    {
+                        perceptionObjList.Add(hit.collider.gameObject);
+                    }
+                }
+
+                /*
+                for (int i = 0; i < detectableObjects.Length; i++)
+                {
+                    if (hit.collider.gameObject.CompareTag(detectableObjects[i]))
+                    {
+                        perceptionObjList.Add(hit.collider.gameObject);
+                        break;
+                    }
+                }
+                */
+            }
+        }
+        return perceptionObjList;
+    }
+
 
     /// <summary>
     /// Converts polar coordinate to cartesian coordinate.
