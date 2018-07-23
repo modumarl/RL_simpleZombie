@@ -71,11 +71,16 @@ public class playerAgent : Agent
         //Debug.Log(_rayAngle);
 
 
+        // --- just for use Loop --------
         PerceiveZombie();
         if(_perceiveZombieList.Count !=0)
         {
             SetTarget();
         }
+
+        SetState();
+        //--------------------------------
+
 
 
         /////////////
@@ -99,7 +104,11 @@ public class playerAgent : Agent
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        
+        Debug.Log(vectorAction.Length);
+        //Debug.Log("[0]"+vectorAction[0]);
+
+
+
         if (_curState == AgentState.dead)
             return;
 
@@ -116,8 +125,22 @@ public class playerAgent : Agent
             rotateDir = transform.up * Mathf.Clamp(vectorAction[1], -1f, 1f);
             shootCommand = Mathf.Clamp(vectorAction[2], 0f, 1f) > 0.3f;
         }
-        else
+        else // discrete Action
         {
+            Debug.Log("[0] " + vectorAction[0]);
+            Debug.Log("[1] " + vectorAction[1]);
+            Debug.Log("[2] " + vectorAction[2]);
+            Debug.Log("[3] " + vectorAction[3]);
+            Debug.Log("[4] " + vectorAction[4]);
+            Debug.Log("[5] " + vectorAction[5]);
+            Debug.Log("[6] " + vectorAction[6]);
+
+
+
+
+
+
+            /*
             switch ((int)(vectorAction[0]))
             {
                 case 1:
@@ -133,6 +156,7 @@ public class playerAgent : Agent
                     rotateDir = transform.up;
                     break;
             }
+            */
         }
 
         agentRB.AddForce(dirToGo * _moveSpeed, ForceMode.Force);
@@ -274,21 +298,26 @@ public class playerAgent : Agent
 
 
         GameObject targetZombie = null ;
+        bool doShot = false;
 
         
 
         //set Target
         if (shotMinHP)
         {
-
+            targetZombie = _targetZombie_minimumHP;
         }
-
         else
         {
-
+            targetZombie = _targetZombie_nearest;                
         }
 
         // TODO : Target ZOmbie가 null 일떄 처리...
+        if (targetZombie == null)
+        {
+            return;
+        }
+
 
         //TODO : Do DMG
         targetZombie.GetComponent<enemyZombie>().UpdateDamage(_hitDmg);
@@ -297,13 +326,16 @@ public class playerAgent : Agent
 
 
         //TODO : manage DPS;
+        _prevShotTime = Time.time;
+        _curState = AgentState.shotWaiting;
+
 
         // TODO : particle mgr 요청
 
 
 
 
-        // output Action이 좀비 때려라 여도 어택을 하면안됨
+        // TODO : output Action이 좀비 때려라 여도 어택을 하면안됨 (어디에 코딩?)
 
     }
 
