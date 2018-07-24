@@ -108,9 +108,62 @@ public class playerAgent : Agent
         //Debug.Log("[0]"+vectorAction[0]);
 
 
-
+        /*
         if (_curState == AgentState.dead)
             return;
+        */
+
+
+        int action = Mathf.FloorToInt(vectorAction[0]);
+
+        // 1 : idle
+        // 2 : up
+        // 3 : down
+        // 4 : left
+        // 5 : right
+        // 6 : shot minimumHP
+        // 7 : shot nearest
+        //Vector3 targetPos = transform.position;
+
+
+        if (action == 0)
+        {
+            Debug.Log("action (( 0 ))");
+            // targetPos = transform.position + new Vector3(1f, 0, 0f);
+        }
+
+        if (action == 1) // idle
+        {
+        }
+
+        else if (action == 2) // up arrow
+        {
+            Debug.Log("action (( 2 ))");
+        }
+
+        else if (action == 3) // down arrow
+        {
+            Debug.Log("action (( 3 ))");
+        }
+
+        else if (action == 4) // left arrow
+        {
+            Debug.Log("action (( 4 ))");
+        }
+        else if (action == 5) // right arrow
+        {
+            Debug.Log("action (( 5 ))");
+        }
+        else if (action == 6) // shot minimum HP
+        {
+            Debug.Log("action (( 6 ))");
+        }
+        else if (action == 7) // shot nearest
+        {
+            Debug.Log("action (( 7 ))");
+        }
+
+
 
         // 죽은후 obs 정보나 네트워크 보낼 정보는 어떻게...?
 
@@ -119,46 +172,19 @@ public class playerAgent : Agent
         bool shootCommand = false;
 
 
+        /*
         if (brain.brainParameters.vectorActionSpaceType == SpaceType.continuous)
         {
             dirToGo = transform.forward * Mathf.Clamp(vectorAction[0], -1f, 1f);
             rotateDir = transform.up * Mathf.Clamp(vectorAction[1], -1f, 1f);
             shootCommand = Mathf.Clamp(vectorAction[2], 0f, 1f) > 0.3f;
         }
-        else // discrete Action
+        else // discrete spaceType
         {
-            Debug.Log("[0] " + vectorAction[0]);
-            Debug.Log("[1] " + vectorAction[1]);
-            Debug.Log("[2] " + vectorAction[2]);
-            Debug.Log("[3] " + vectorAction[3]);
-            Debug.Log("[4] " + vectorAction[4]);
-            Debug.Log("[5] " + vectorAction[5]);
-            Debug.Log("[6] " + vectorAction[6]);
 
-
-
-
-
-
-            /*
-            switch ((int)(vectorAction[0]))
-            {
-                case 1:
-                    dirToGo = transform.forward;
-                    break;
-                case 2:
-                    shootCommand = true;
-                    break;
-                case 3:
-                    rotateDir = -transform.up;
-                    break;
-                case 4:
-                    rotateDir = transform.up;
-                    break;
-            }
-            */
         }
 
+        */
         agentRB.AddForce(dirToGo * _moveSpeed, ForceMode.Force);
         transform.Rotate(rotateDir, Time.fixedDeltaTime * _turnSpeed);
 
