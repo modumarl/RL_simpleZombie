@@ -28,11 +28,12 @@ public class playerAgent : Agent
     }
 
 
+    int _hitCall = 0;
 
 
     //////*imported value*//////
     float _moveSpeed;
-    float _turnSpeed;
+    float _turnDegree;
     float _rayDistance;
     float _hitDmg;
     float[] _rayAngle = { 20f, 90f, 160f, 45f, 135f, 70f, 110f };
@@ -52,11 +53,12 @@ public class playerAgent : Agent
         agentRB = GetComponent<Rigidbody>();
 
         _moveSpeed = infoScript.moveSpeed_playerAgent;
-        _turnSpeed = infoScript.turnSpeed_playerAgent;
+        _turnDegree = infoScript.turnDegree_playerAgent;
         _rayDistance = infoScript.rayDistacne_agent;
         _hitDmg = infoScript.dmg_playerAgent;
         //_rayAngle = infoScript.rayAngle_agent;
         _hp = infoScript.fullHp_playerAgent;
+        _shotCoolTime = infoScript.shotCoolTime_playerAgent;
 
 
         ResetAgentValue();
@@ -79,6 +81,7 @@ public class playerAgent : Agent
         }
 
         SetState();
+
         //--------------------------------
 
 
@@ -104,9 +107,6 @@ public class playerAgent : Agent
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        Debug.Log(vectorAction.Length);
-        //Debug.Log("[0]"+vectorAction[0]);
-
 
         /*
         if (_curState == AgentState.dead)
@@ -115,61 +115,66 @@ public class playerAgent : Agent
 
 
         int action = Mathf.FloorToInt(vectorAction[0]);
+        Vector3 dirToGo = Vector3.zero;
 
-        // 1 : idle
-        // 2 : up
-        // 3 : down
-        // 4 : left
-        // 5 : right
-        // 6 : shot minimumHP
-        // 7 : shot nearest
-        //Vector3 targetPos = transform.position;
+        if (action == 1) // up arrow
+        {
+            dirToGo = transform.forward;
+            agentRB.AddForce(dirToGo * _moveSpeed * 250f, ForceMode.Force);
 
 
-        if (action == 0)
-        {
-            Debug.Log("action (( 0 ))");
-            // targetPos = transform.position + new Vector3(1f, 0, 0f);
+            /*
+            // change to Translate???
+            transform.Translate(transform.forward * _moveSpeed);
+            Debug.LogWarning("FORWARD = " + transform.forward);
+            */
         }
 
-        if (action == 1) // idle
+        else if (action == 2) // down arrow
         {
+            dirToGo = transform.forward * -1;
+            agentRB.AddForce(dirToGo * _moveSpeed * 250f, ForceMode.Force);
+
+
+
+
+            /*
+            // change to Translate???
+            transform.Translate(-1 * transform.forward * _moveSpeed);
+            Debug.LogWarning("FORWARD = " + transform.forward);
+            */
         }
 
-        else if (action == 2) // up arrow
+        else if (action == 3) // left arrow
         {
-            Debug.Log("action (( 2 ))");
+            transform.Rotate(transform.up * -1 * _turnDegree);
+            //Debug.LogWarning("FORWARD = " + transform.forward);
+        }
+        else if (action == 4) // right arrow
+        {
+            transform.Rotate(transform.up * _turnDegree);
+            //Debug.LogWarning("FORWARD = " + transform.forward);
+
+        }
+        else if (action == 5) // shot minimum HP
+        {
+            Shot(true);
+        }
+        else if (action == 6) // shot nearest
+        {
+            Shot(false);
         }
 
-        else if (action == 3) // down arrow
+        else if (action == 7) // idle
         {
-            Debug.Log("action (( 3 ))");
         }
-
-        else if (action == 4) // left arrow
-        {
-            Debug.Log("action (( 4 ))");
-        }
-        else if (action == 5) // right arrow
-        {
-            Debug.Log("action (( 5 ))");
-        }
-        else if (action == 6) // shot minimum HP
-        {
-            Debug.Log("action (( 6 ))");
-        }
-        else if (action == 7) // shot nearest
-        {
-            Debug.Log("action (( 7 ))");
-        }
-
 
 
         // 죽은후 obs 정보나 네트워크 보낼 정보는 어떻게...?
 
-        Vector3 dirToGo = Vector3.zero;
-        Vector3 rotateDir = Vector3.zero;
-        bool shootCommand = false;
+        //Vector3 dirToGo = Vector3.zero;
+        //Vector3 rotateDir = Vector3.zero;
+        //bool shootCommand = false;
 
 
         /*
@@ -184,9 +189,9 @@ public class playerAgent : Agent
 
         }
 
-        */
-        agentRB.AddForce(dirToGo * _moveSpeed, ForceMode.Force);
-        transform.Rotate(rotateDir, Time.fixedDeltaTime * _turnSpeed);
+        /*
+       // agentRB.AddForce(dirToGo * _moveSpeed, ForceMode.Force);
+       // transform.Rotate(rotateDir, Time.fixedDeltaTime * _turnDegree);
 
 
         if (shootCommand)
@@ -195,14 +200,15 @@ public class playerAgent : Agent
             {
 
 
-                /*
                 shootAction.ShootMissile(_curTeam, _shootPower, transform.position + transform.forward * missileInitPivot, transform.forward);
                 _curState = AgentState.shotWaiting;
                 _shootingTime = Time.time;
 
-                */
             }
         }
+
+        */
+
     }
 
     public override void AgentReset()
@@ -312,7 +318,9 @@ public class playerAgent : Agent
         {
             if (Time.time > _prevShotTime + _shotCoolTime)
             {
-                _curState = AgentState.normal;
+                _curState = AgentState.shotReady;
+
+                Debug.LogWarning("[shot Ready]");
             }
         }
 
@@ -320,8 +328,14 @@ public class playerAgent : Agent
 
     void Shot(bool shotMinHP)
     {
-        // zombie에게 shot
+        if (_curState != AgentState.shotReady)
+        {
+            return;
+        }
 
+
+        _hitCall++;
+        Debug.Log("shot excute = " + _hitCall);
 
         GameObject targetZombie = null ;
         bool doShot = false;

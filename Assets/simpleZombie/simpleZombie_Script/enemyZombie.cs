@@ -45,15 +45,17 @@ public class enemyZombie : MonoBehaviour {
     {
         infoScript = InfoScript.instance;
         _moveSpeed = infoScript.moveSpeed_zombie;
-        _turnSpeed = infoScript.turnSpeed_zombie;
+        _turnSpeed = infoScript.turnDegree_zombie;
         _hitDmg = infoScript.dmg_zombie;
         _hp = infoScript.fullHp_zombie;
 
-        _isDead = true; // TODO : set this in mgr
+        _isDead = false; // TODO : change set this in mgr (why? episiode reset)
     }
 
     public void UpdateDamage(float recevDmg)
     {
+        Debug.LogWarning("Zombie HIT!!");
+
         if (_isDead == true)
         {
             Debug.LogError("[Zombie HP ]smth WRONG!!!");
@@ -66,6 +68,8 @@ public class enemyZombie : MonoBehaviour {
         {
             _isDead = true;
             _hp = 0;
+
+            Debug.LogWarning("[DEAD]");
         }
 
 

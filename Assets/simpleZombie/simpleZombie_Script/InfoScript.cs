@@ -8,8 +8,8 @@ public class InfoScript : MonoBehaviour  {
 
     public float moveSpeed_playerAgent = 20f;
     public float moveSpeed_zombie = 15f;
-    public float turnSpeed_playerAgent = 5f;
-    public float turnSpeed_zombie = 5f;
+    public float turnDegree_playerAgent = 5f;
+    public float turnDegree_zombie = 5f;
 
     public float fullHp_playerAgent = 100;
     public float fullHp_zombie = 60;

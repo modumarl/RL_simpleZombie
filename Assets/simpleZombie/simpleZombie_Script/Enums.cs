@@ -31,7 +31,7 @@ public enum ObjectType
 
 public enum AgentState
 {
-    normal,
+    shotReady,
     shotWaiting,
     dead,
     
