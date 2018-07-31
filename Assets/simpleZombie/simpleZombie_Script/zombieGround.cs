@@ -38,10 +38,7 @@ public class zombieGround : Area {
 		
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	
 
     public override void ResetArea()
     {

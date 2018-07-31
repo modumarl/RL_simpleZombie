@@ -11,6 +11,7 @@ public class enemyZombie : MonoBehaviour {
     float _hitDmg;
 
     Rigidbody zombieRB;
+    MeshRenderer _renderer;
 
     public bool isDead
     {
@@ -25,19 +26,23 @@ public class enemyZombie : MonoBehaviour {
         get { return _hp; }
     }
      
-    
+    ///////////////////////////////////////////////////////////
+
 	void Start ()
     {
         zombieRB = GetComponent<Rigidbody>();
+        _renderer = GetComponent<MeshRenderer>();
+
         initializeZombie();
     }
 
 
     private void FixedUpdate()
     {
-        
+        ChasingAgent();
     }
 
+    
 
 
 
@@ -48,31 +53,48 @@ public class enemyZombie : MonoBehaviour {
         _turnSpeed = infoScript.turnDegree_zombie;
         _hitDmg = infoScript.dmg_zombie;
         _hp = infoScript.fullHp_zombie;
+        _renderer.material = infoScript.GetHP_Material(true, _hp);
 
         _isDead = false; // TODO : change set this in mgr (why? episiode reset)
     }
 
-    public void UpdateDamage(float recevDmg)
+    public bool UpdateDamage_isDead(float recevDmg)
     {
         Debug.LogWarning("Zombie HIT!!");
 
         if (_isDead == true)
         {
             Debug.LogError("[Zombie HP ]smth WRONG!!!");
-            return;
+            return true;
         }
 
         _hp -= recevDmg;
+
+        bool ret_deadinfo ;
 
         if(_hp <= 0)
         {
             _isDead = true;
             _hp = 0;
 
-            Debug.LogWarning("[DEAD]");
+            ret_deadinfo = true;
+
+            Debug.LogWarning("[ZOMBIE DEAD]");
         }
 
+        _renderer.material = InfoScript.instance.GetHP_Material(true, _hp);
+        ret_deadinfo = false;
 
+        return ret_deadinfo;
+    }
+
+    void ChasingAgent()
+    {
+
+    }
+
+    void AttackAgent()
+    {
 
     }
 }

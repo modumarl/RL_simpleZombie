@@ -11,7 +11,7 @@ public class InfoScript : MonoBehaviour  {
     public float turnDegree_playerAgent = 5f;
     public float turnDegree_zombie = 5f;
 
-    public float fullHp_playerAgent = 100;
+    public float fullHp_playerAgent = 50;
     public float fullHp_zombie = 60;
     public float dmg_playerAgent = 20;
     public float dmg_zombie = 10;
@@ -22,6 +22,12 @@ public class InfoScript : MonoBehaviour  {
     //public float[] rayAngle_agent = { 20f, 90f, 160f, 45f, 135f, 70f, 110f };
     public float rayDistacne_agent = 40f;
 
+    public Material[] agentHpMat;
+    public Material[] zombieHpMat;
+
+    int _agentMatCount;
+    int _zombieMatCount;
+
 
     void Awake()
     {
@@ -29,6 +35,9 @@ public class InfoScript : MonoBehaviour  {
         {
             instance = this;
         }
+
+        _agentMatCount = agentHpMat.Length;
+        _zombieMatCount = zombieHpMat.Length;
     }
 
     
@@ -39,4 +48,47 @@ public class InfoScript : MonoBehaviour  {
         }
     }
 
+    public Material GetHP_Material(bool isZombie, float hp)
+    {
+        Material mat = null;
+
+        if(isZombie == true)
+        {
+            int remainHitCount = (int)(hp / dmg_playerAgent);
+            Debug.Log("remain hit = " + remainHitCount);
+
+            mat = zombieHpMat[remainHitCount];
+        }
+        else // agent case
+        {
+            int remainHitCount = (int)(hp / dmg_zombie);
+            Debug.Log("remain hit = " + remainHitCount);
+
+            mat = agentHpMat[remainHitCount];
+        }
+
+
+        return mat;
+    }
+
+    /*
+    public Color GetHPColor(bool isZombie,  float hp)
+    {
+        Color color = Color.black;
+
+        if(isZombie == true)
+        {
+
+        }
+
+        else
+        {
+
+        }
+
+        //TODO : hp에 따른 color
+        return color;
+    }
+
+    */
 }

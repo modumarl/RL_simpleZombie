@@ -19,6 +19,8 @@ public class playerAgent : Agent
     RayPerception _rayPercept;
     Rigidbody agentRB;
     AgentState _curState;
+    MeshRenderer _renderer;
+
     float _shotCoolTime;
     float _prevShotTime;
     float _hp;
@@ -51,6 +53,7 @@ public class playerAgent : Agent
 
         _rayPercept = GetComponent<RayPerception>();
         agentRB = GetComponent<Rigidbody>();
+        _renderer = GetComponent<MeshRenderer>();
 
         _moveSpeed = infoScript.moveSpeed_playerAgent;
         _turnDegree = infoScript.turnDegree_playerAgent;
@@ -58,6 +61,8 @@ public class playerAgent : Agent
         _hitDmg = infoScript.dmg_playerAgent;
         //_rayAngle = infoScript.rayAngle_agent;
         _hp = infoScript.fullHp_playerAgent;
+        _renderer.material = infoScript.GetHP_Material(false, _hp);
+
         _shotCoolTime = infoScript.shotCoolTime_playerAgent;
 
 
@@ -75,6 +80,7 @@ public class playerAgent : Agent
 
         // --- just for use Loop --------
         PerceiveZombie();
+
         if(_perceiveZombieList.Count !=0)
         {
             SetTarget();
@@ -339,17 +345,19 @@ public class playerAgent : Agent
 
         GameObject targetZombie = null ;
         bool doShot = false;
-
+        bool isTarget_minimumHP;
         
 
         //set Target
         if (shotMinHP)
         {
             targetZombie = _targetZombie_minimumHP;
+            isTarget_minimumHP = true;
         }
         else
         {
-            targetZombie = _targetZombie_nearest;                
+            targetZombie = _targetZombie_nearest;
+            isTarget_minimumHP = false;
         }
 
         // TODO : Target ZOmbie가 null 일떄 처리...
@@ -359,13 +367,34 @@ public class playerAgent : Agent
         }
 
 
-        //TODO : Do DMG
-        targetZombie.GetComponent<enemyZombie>().UpdateDamage(_hitDmg);
+        bool isdead = targetZombie.GetComponent<enemyZombie>().UpdateDamage_isDead(_hitDmg);
 
-        //TODO setReward
+        if(isdead == true)
+        {
+            if(isTarget_minimumHP == true)
+            {
+                if(_targetZombie_minimumHP.GetInstanceID() == _targetZombie_nearest.GetInstanceID())
+                {
+                    _targetZombie_nearest = null;
+                }
+
+                _targetZombie_minimumHP = null;
 
 
-        //TODO : manage DPS;
+                //TODO : setReward
+
+            }
+        }
+        else // 죽지는 않음
+        {
+            //TODO : setReward
+
+        }
+
+
+
+
+        // manage DPS;
         _prevShotTime = Time.time;
         _curState = AgentState.shotWaiting;
 
@@ -374,8 +403,7 @@ public class playerAgent : Agent
 
 
 
-
-        // TODO : output Action이 좀비 때려라 여도 어택을 하면안됨 (어디에 코딩?)
+        
 
     }
 
