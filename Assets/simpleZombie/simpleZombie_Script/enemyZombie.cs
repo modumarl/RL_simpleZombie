@@ -10,6 +10,14 @@ public class enemyZombie : MonoBehaviour {
     float _turnSpeed;
     float _hitDmg;
 
+    float _attackCooltime;
+    float _prevAttackTime;
+
+    GameObject targetAgent;
+    ZombieState _zombieState;
+
+
+
     Rigidbody zombieRB;
     MeshRenderer _renderer;
 
@@ -33,7 +41,7 @@ public class enemyZombie : MonoBehaviour {
         zombieRB = GetComponent<Rigidbody>();
         _renderer = GetComponent<MeshRenderer>();
 
-        initializeZombie();
+        InitializeZombie();
     }
 
 
@@ -46,7 +54,12 @@ public class enemyZombie : MonoBehaviour {
 
 
 
-    void initializeZombie()
+    void InitializeZombie()
+    {
+        SetZombieInitValue();
+    }
+
+    void SetZombieInitValue()
     {
         infoScript = InfoScript.instance;
         _moveSpeed = infoScript.moveSpeed_zombie;
@@ -55,7 +68,17 @@ public class enemyZombie : MonoBehaviour {
         _hp = infoScript.fullHp_zombie;
         _renderer.material = infoScript.GetHP_Material(true, _hp);
 
+        _zombieState = ZombieState.attackReady;
+
         _isDead = false; // TODO : change set this in mgr (why? episiode reset)
+    }
+
+
+    public void ResetZombie()
+    {
+        SetZombieInitValue();
+
+
     }
 
     public bool UpdateDamage_isDead(float recevDmg)
@@ -95,6 +118,17 @@ public class enemyZombie : MonoBehaviour {
 
     void AttackAgent()
     {
+        // dps 기록 
+
+
+
+    }
+
+    void SetTarget()
+    {
+        //TODO : ground Instance로 부터 좀비정보를 받아다가 서치하면서 가장가까운놈 타겟
+        //     : agent죽음정보가 들어오면 다시 re searching
+
 
     }
 }

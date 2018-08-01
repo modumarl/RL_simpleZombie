@@ -36,3 +36,12 @@ public enum AgentState
     dead,
     
 }
+
+public enum ZombieState
+{
+    attackReady,
+    attackWaiting,
+    dead,
+
+
+}
