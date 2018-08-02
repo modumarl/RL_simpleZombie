@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ObjectManager : MonoBehaviour
 {
-    Dictionary<ObjectType, ObjectPool> poolList = new Dictionary<ObjectType, ObjectPool>();
+    Dictionary<ObjType, ObjectPool> poolList = new Dictionary<ObjType, ObjectPool>();
 
     public static ObjectManager instance { get; private set; }
 
@@ -27,18 +27,19 @@ public class ObjectManager : MonoBehaviour
         {
             var pool = new ObjectPool();
             pool.Init(ObjectList[i], SizeList[i],this.gameObject);
-            poolList.Add(GetObjTypeByIndex(i), pool);
+            poolList.Add(GetObjType(i), pool);
         }
     }
 
     //-----------------------------------------------------------------------------------
     // public functions
-    public GameObject Assign(ObjectType objType, Vector3 initPos)
+    public GameObject Assign(ObjType objType, Vector3 initPos)
     {
         return poolList[objType].Assign(initPos);
     }
 
-    public void FreeAllObj(ObjectType objType)
+    //public void FreeAllObj(battleObjectType objType)
+    public void FreeAllObj(ObjType objType)
     {
         poolList[objType].FreeAll();
     }
@@ -75,21 +76,28 @@ public class ObjectManager : MonoBehaviour
 
 
     //hard coding
-    ObjectType GetObjTypeByIndex(int index)
+    ObjType GetObjType(int index)
     {
-        ObjectType objType = ObjectType.missile; //just for default
+        ObjType objType = ObjType.playerAgent;
+
         switch(index)
         {
-            case 0: 
-                objType = ObjectType.agent;
+            case 0:
+                objType = ObjType.zombie;
                 break;
+
             case 1:
-                objType = ObjectType.enemy;
+                objType = ObjType.shotParticle;
                 break;
+
+            /*
             case 2:
-                objType = ObjectType.missile;
+                objType = ObjType.playerAgent;
                 break;
+                */
         }
+
         return objType;
     }
+
 }

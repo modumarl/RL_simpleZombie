@@ -16,7 +16,7 @@ public enum BotState
     daed,
 }
 
-public enum ObjectType
+public enum battleObjectType
 {
     missile,
     agent,
@@ -42,6 +42,15 @@ public enum ZombieState
     attackReady,
     attackWaiting,
     dead,
+
+
+}
+
+public enum ObjType
+{
+    playerAgent,
+    zombie,
+    shotParticle, 
 
 
 }

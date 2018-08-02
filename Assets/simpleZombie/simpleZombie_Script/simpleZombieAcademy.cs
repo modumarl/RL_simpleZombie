@@ -14,7 +14,7 @@ public class simpleZombieAcademy : Academy
 
 
     [HideInInspector]
-    public zombieGround[] groundList;
+    public GameObject[] groundList;
 
     public int totalScore;
     //public Text scoreText;
@@ -31,24 +31,31 @@ public class simpleZombieAcademy : Academy
 
     public override void AcademyReset()
     {
+        groundList = GameObject.FindGameObjectsWithTag("ground");
+
+        Debug.Log("ACADEMY RESET : ground Count = " + groundList.Length);
+
+
+        // TODO : 이런건 어디서??
+        // ObjectManager.instance.FreeAllObj(ObjectType.missile);
+
+
+        for (int i = 0; i<groundList.Length; ++i )
+        {
+            groundList[i].GetComponent<zombieGround>().ResetGround();
+        }
+
+        //total SCORE ????
+
 
         /*
-
         //groundList = FindObjectsOfType<zombieGround>();
         //Debug.Log("IN  AcademyReset : BotAgentCount = " + BotAgentList.Length);
 
-        foreach (zombieGround zg in groundList)
-        {
-            // todo
-
-            //zg.ResetBattleArea(BotAgentList, BotEnemyList);
-
-        }
-
+        
         totalScore = 0;
 
         //ObjectManager.instance.FreeAllObj(ObjectType.missile);
-
         */
     }
 
