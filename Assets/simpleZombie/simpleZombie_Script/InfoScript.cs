@@ -7,7 +7,9 @@ public class InfoScript : MonoBehaviour  {
     public static InfoScript instance { get; private set; }
 
     public int initZombieNum = 3;
-    
+    public float deltaTime_genZombie = 10f;
+
+
     public float moveSpeed_playerAgent = 20f;
     public float moveSpeed_zombie = 15f;
     public float turnDegree_playerAgent = 5f;
@@ -17,6 +19,11 @@ public class InfoScript : MonoBehaviour  {
     public float fullHp_zombie = 60;
     public float dmg_playerAgent = 20;
     public float dmg_zombie = 10;
+
+    public float Reward_to_Shooter = 30f;
+    public float Reward_to_Team = 10f;
+
+
 
     public float shotCoolTime_playerAgent = 2f;
     public float coolTime_zombie = 0.5f;

@@ -361,29 +361,36 @@ public class playerAgent : Agent
         }
 
         // TODO : Target ZOmbie가 null 일떄 처리...
-        if (targetZombie == null)
+        if (targetZombie == null || targetZombie.GetComponent<enemyZombie>().isDead == true)
         {
             return;
         }
 
 
         bool isdead = targetZombie.GetComponent<enemyZombie>().UpdateDamage_isDead(_hitDmg);
+        Debug.LogWarning("ZZZ DEAD ?????? " + isdead);
+
 
         if(isdead == true)
         {
-            if(isTarget_minimumHP == true)
+
+            zombieGround.instance.ZombieDead(targetZombie, this.gameObject);
+
+            //set target zombie
+            if (isTarget_minimumHP == true)
             {
                 if(_targetZombie_minimumHP.GetInstanceID() == _targetZombie_nearest.GetInstanceID())
                 {
                     _targetZombie_nearest = null;
                 }
-
                 _targetZombie_minimumHP = null;
-
-
-                //TODO : setReward
-
             }
+            else
+            {
+                _targetZombie_nearest = null;
+            }
+
+
         }
         else // 죽지는 않음
         {

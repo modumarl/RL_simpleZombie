@@ -762,7 +762,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &330692645
 Transform:
   m_ObjectHideFlags: 0
@@ -1802,6 +1802,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1455798867208270, guid: b8c09e884f8722141947eb2799abe1b2, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b8c09e884f8722141947eb2799abe1b2, type: 2}
   m_IsPrefabParent: 0
@@ -2672,6 +2676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initZombieNum: 3
+  deltaTime_genZombie: 10
   moveSpeed_playerAgent: 0.5
   moveSpeed_zombie: 0.5
   turnDegree_playerAgent: 2.5
@@ -2680,7 +2685,9 @@ MonoBehaviour:
   fullHp_zombie: 60
   dmg_playerAgent: 20
   dmg_zombie: 10
-  shotCoolTime_playerAgent: 3
+  Reward_to_Shooter: 30
+  Reward_to_Team: 10
+  shotCoolTime_playerAgent: 1
   coolTime_zombie: 1
   rayDistacne_agent: 40
   agentHpMat:
@@ -3429,7 +3436,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1949188000
 Transform:
   m_ObjectHideFlags: 0

@@ -50,11 +50,7 @@ public class enemyZombie : MonoBehaviour {
         ChasingAgent();
     }
 
-    
-
-
-
-    void InitializeZombie()
+    public void InitializeZombie()
     {
         SetZombieInitValue();
     }
@@ -73,13 +69,14 @@ public class enemyZombie : MonoBehaviour {
         _isDead = false; // TODO : change set this in mgr (why? episiode reset)
     }
 
-
+    /*
     public void ResetZombie()
     {
         SetZombieInitValue();
 
 
     }
+    */
 
     public bool UpdateDamage_isDead(float recevDmg)
     {
@@ -93,22 +90,19 @@ public class enemyZombie : MonoBehaviour {
 
         _hp -= recevDmg;
 
-        bool ret_deadinfo ;
 
         if(_hp <= 0)
         {
             _isDead = true;
             _hp = 0;
 
-            ret_deadinfo = true;
-
-            Debug.LogWarning("[ZOMBIE DEAD]");
+            return true;
         }
-
-        _renderer.material = InfoScript.instance.GetHP_Material(true, _hp);
-        ret_deadinfo = false;
-
-        return ret_deadinfo;
+        else
+        {
+            _renderer.material = InfoScript.instance.GetHP_Material(true, _hp);
+            return false;
+        }
     }
 
     void ChasingAgent()
