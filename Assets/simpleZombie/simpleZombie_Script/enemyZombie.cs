@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class enemyZombie : MonoBehaviour {
 
+    public float attackRange = 1.5f;
+
     float _moveSpeed;
     float _turnSpeed;
     float _hitDmg;
@@ -11,10 +13,8 @@ public class enemyZombie : MonoBehaviour {
     float _attackCooltime;
     float _prevAttackTime;
 
-    GameObject targetAgent;
+    GameObject _targetAgent = null;
     ZombieState _zombieState;
-
-
 
     Rigidbody zombieRB;
     MeshRenderer _renderer;
@@ -49,7 +49,8 @@ public class enemyZombie : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        ChasingAgent();
+        _targetAgent = SetTarget();
+        Chasing_Attack_Agent();
     }
 
     public void InitializeZombie()
@@ -90,7 +91,6 @@ public class enemyZombie : MonoBehaviour {
 
         _hp -= recevDmg;
 
-
         if(_hp <= 0)
         {
             _isDead = true;
@@ -105,8 +105,57 @@ public class enemyZombie : MonoBehaviour {
         }
     }
 
-    void ChasingAgent()
+    GameObject SetTarget()
     {
+        //var agentList = zombieGround.instance._playerAgentList;
+
+        var zombieGroundInst = zombieGround.instance;
+
+        GameObject target = null;
+        float minDist = float.MaxValue;
+
+        for (int i=0; i< zombieGroundInst._playerAgentList.Count; ++i)
+        {
+            // 만약 죽어 null 이면 return 
+
+            var dist = Vector3.Distance(zombieGroundInst._playerAgentList[i].transform.position, transform.position);
+
+            if ( dist < minDist && zombieGroundInst._playerAgentList[i].activeSelf == true)
+            {
+                target = zombieGroundInst._playerAgentList[i];
+                minDist = dist;
+            }
+        }
+        return target;
+    }
+
+    void Chasing_Attack_Agent()
+    {
+        if (_targetAgent == null || _targetAgent.activeSelf == false)
+        {
+            Debug.LogWarning(gameObject.name + ":" + " target NULL");
+            return;
+        }
+
+        float distance = (_targetAgent.transform.position - transform.position).magnitude;
+        if (distance < attackRange)
+        {
+            //enemyState = ENEMYSTATE.ATTACK;
+            AttackAgent();
+        }
+        else
+        {
+            Vector3 dir = _targetAgent.transform.position - transform.position;
+            dir.y = 0.0f;
+            dir.Normalize();
+
+            zombieRB.AddForce(dir * _moveSpeed * 100f, ForceMode.Force);
+
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), _turnSpeed * Time.deltaTime);
+
+            //characterController.SimpleMove(dir * moveSpeed);
+        }
+
 
     }
 
@@ -118,12 +167,4 @@ public class enemyZombie : MonoBehaviour {
 
     }
 
-    void SetTarget()
-    {
-        //TODO : ground Instance로 부터 좀비정보를 받아다가 서치하면서 가장가까운놈 타겟
-        //     : agent죽음정보가 들어오면 다시 re searching
-
-
-    }
 }
-                 

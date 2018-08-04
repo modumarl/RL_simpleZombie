@@ -213,7 +213,6 @@ public class zombieGround : Area {
         // todo : 모퉁이에서 생성
 
         _prev_GenerateZombieTime = Time.time;
-        Debug.LogWarning("*&*&*&*& _prevGenTime *&*&* = " + _prev_GenerateZombieTime);
 
     }
 

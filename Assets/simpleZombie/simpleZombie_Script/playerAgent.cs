@@ -142,8 +142,6 @@ public class playerAgent : Agent
             agentRB.AddForce(dirToGo * _moveSpeed * 250f, ForceMode.Force);
 
 
-
-
             /*
             // change to Translate???
             transform.Translate(-1 * transform.forward * _moveSpeed);
@@ -174,47 +172,6 @@ public class playerAgent : Agent
         else if (action == 7) // idle
         {
         }
-
-
-        // 죽은후 obs 정보나 네트워크 보낼 정보는 어떻게...?
-
-        //Vector3 dirToGo = Vector3.zero;
-        //Vector3 rotateDir = Vector3.zero;
-        //bool shootCommand = false;
-
-
-        /*
-        if (brain.brainParameters.vectorActionSpaceType == SpaceType.continuous)
-        {
-            dirToGo = transform.forward * Mathf.Clamp(vectorAction[0], -1f, 1f);
-            rotateDir = transform.up * Mathf.Clamp(vectorAction[1], -1f, 1f);
-            shootCommand = Mathf.Clamp(vectorAction[2], 0f, 1f) > 0.3f;
-        }
-        else // discrete spaceType
-        {
-
-        }
-
-        /*
-       // agentRB.AddForce(dirToGo * _moveSpeed, ForceMode.Force);
-       // transform.Rotate(rotateDir, Time.fixedDeltaTime * _turnDegree);
-
-
-        if (shootCommand)
-        {
-            if (_curState == AgentState.normal)
-            {
-
-
-                shootAction.ShootMissile(_curTeam, _shootPower, transform.position + transform.forward * missileInitPivot, transform.forward);
-                _curState = AgentState.shotWaiting;
-                _shootingTime = Time.time;
-
-            }
-        }
-
-        */
-
     }
 
     public override void AgentReset()
