@@ -49,6 +49,11 @@ public class enemyZombie : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        if(_isDead == true)
+        {
+            return;
+        }
+
         _targetAgent = SetTarget();
         Chasing_Attack_Agent();
     }
@@ -66,7 +71,8 @@ public class enemyZombie : MonoBehaviour {
         _hitDmg = infoScript.dmg_zombie;
         _hp = infoScript.fullHp_zombie;
         _renderer.material = infoScript.GetHP_Material(true, _hp);
-
+        _attackCooltime = infoScript.coolTime_zombie;
+        _prevAttackTime = 0f;
         _zombieState = ZombieState.attackReady;
 
         _isDead = false; // TODO : change set this in mgr (why? episiode reset)
@@ -138,7 +144,7 @@ public class enemyZombie : MonoBehaviour {
         }
 
         float distance = (_targetAgent.transform.position - transform.position).magnitude;
-        if (distance < attackRange)
+        if (distance < attackRange && _prevAttackTime + _attackCooltime < Time.time)
         {
             //enemyState = ENEMYSTATE.ATTACK;
             AttackAgent();
@@ -150,21 +156,21 @@ public class enemyZombie : MonoBehaviour {
             dir.Normalize();
 
             zombieRB.AddForce(dir * _moveSpeed * 100f, ForceMode.Force);
-
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), _turnSpeed * Time.deltaTime);
 
             //characterController.SimpleMove(dir * moveSpeed);
         }
-
-
     }
 
     void AttackAgent()
     {
-        // dps 기록 
-
-
-
+        if (_targetAgent == null || _targetAgent.activeSelf == false)
+        {
+            Debug.LogWarning(gameObject.name + ":" + " target NULL");
+            return;
+        }
+        _targetAgent.GetComponent<playerAgent>().AttackByZombie(_hitDmg);
+        _prevAttackTime = Time.time;
     }
 
 }

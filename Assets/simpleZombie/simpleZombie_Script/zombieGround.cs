@@ -66,7 +66,7 @@ public class zombieGround : Area {
 
         if ( _isEpisodeStart == true && nexGenTime < Time.time )
         {
-            GenerateZombie();
+            //GenerateZombie();
         }
     }
 
@@ -112,6 +112,7 @@ public class zombieGround : Area {
 
             agentArr[i].transform.position = initPos;
             agentArr[i].transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
+            agentArr[i].gameObject.SetActive(true);
 
             _playerAgentList.Add(agentArr[i]);
 
@@ -158,7 +159,7 @@ public class zombieGround : Area {
 
         else
         {
-
+            //set reward
         }
 
 

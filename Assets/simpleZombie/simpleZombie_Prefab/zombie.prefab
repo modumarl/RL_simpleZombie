@@ -485,4 +485,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 750a8f8b0521c8c44be5617e540730d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 1.5
+  attackRange: 2

@@ -186,12 +186,6 @@ public class playerAgent : Agent
 
     ////////////////////////////////////////////////////////////////////////////////
 
-
-    void Start()
-    {
-
-    }
-
     void PerceiveZombie()
     {
         _perceiveZombieList = _rayPercept.PerceiveObjectList(_rayDistance, _rayAngle, "zombie", 0f, 0f);
@@ -224,7 +218,6 @@ public class playerAgent : Agent
                 minHp = thisZombieHp;
             }
 
-
             float thisZombieDist = Vector3.Distance(_perceiveZombieList[i].transform.position, transform.position);
             if (minDist > thisZombieDist)
             {
@@ -234,42 +227,33 @@ public class playerAgent : Agent
         }
     }
 
-
-    /*
-    private void FixedUpdate()
-    {
-
-    }
-    */
-
-
     ////////////////////////////////////////////////////////////////////////////////
 
-    public void AttackByZombie(int inputDmg)
+    public void AttackByZombie(float inputDmg)
     {
         // TODO : SendReward
 
-       
-
         UpdateHp(inputDmg);
     }
-    void UpdateHp(int inputDmg)
+    void UpdateHp(float inputDmg)
     {
         if(_curState == AgentState.dead)
         {
             return;
         }
 
-
         if(_hp > inputDmg)
         {
             _hp -= inputDmg;
+            _renderer.material = infoScript.GetHP_Material(true, _hp);
         }
 
         else
         {
             _hp = 0;
             _curState = AgentState.dead;
+            this.gameObject.SetActive(false);
+            zombieGround.instance.AgentDead(this.gameObject);
         }
     }
 
@@ -293,7 +277,6 @@ public class playerAgent : Agent
         {
             return;
         }
-
 
         _hitCall++;
         Debug.Log("shot excute = " + _hitCall);
@@ -325,7 +308,6 @@ public class playerAgent : Agent
 
         if(isdead == true)
         {
-
             zombieGround.instance.ZombieDead(targetZombie, this.gameObject);
 
             //set target zombie
@@ -341,29 +323,17 @@ public class playerAgent : Agent
             {
                 _targetZombie_nearest = null;
             }
-
-
         }
         else // 죽지는 않음
         {
             //TODO : setReward
-
         }
-
-
-
 
         // manage DPS;
         _prevShotTime = Time.time;
         _curState = AgentState.shotWaiting;
 
-
         // TODO : particle mgr 요청
-
-
-
-        
-
     }
 
     void ResetAgentValue()
