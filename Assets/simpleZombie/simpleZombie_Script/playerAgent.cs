@@ -325,8 +325,6 @@ public class playerAgent : Agent
             if (Time.time > _prevShotTime + _shotCoolTime)
             {
                 _curState = AgentState.shotReady;
-
-                Debug.LogWarning("[shot Ready]");
             }
         }
 
@@ -366,10 +364,7 @@ public class playerAgent : Agent
             return;
         }
 
-
         bool isdead = targetZombie.GetComponent<enemyZombie>().UpdateDamage_isDead(_hitDmg);
-        Debug.LogWarning("ZZZ DEAD ?????? " + isdead);
-
 
         if(isdead == true)
         {

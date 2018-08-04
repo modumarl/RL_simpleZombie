@@ -81,7 +81,6 @@ public class zombieGround : Area {
     void ReseetEpisodeReward()
     {
         _episodeReward = 0;
-
         _episodeStartTime = Time.time;
     }
 
@@ -93,60 +92,8 @@ public class zombieGround : Area {
     {
         ReseetEpisodeReward();
 
-
         _playerAgentList.Clear();
         _zombieList.Clear();
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        /*
-        foreach (GameObject agent in _playerAgentList)
-        {
-            if (agent.transform.parent == gameObject.transform)
-            {
-                //Debug.LogWarning("IN AREA: AgentReset!!@!@!@"); 
-
-                //agent.SetActive(true);
-
-
-                // TODO : 센터에 생성할것
-
-                agent.GetComponent<playerAgent>().AgentReset();
-
-                agent.transform.position = new Vector3(Random.Range(-groundLength, groundLength), 2f,
-                                                       Random.Range(-groundLength, groundLength))
-                    + transform.position;
-                agent.transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
-
-                _playerAgentList.Add(agent);
-            }
-        }
-        foreach (GameObject zombie in _zombieList)
-        {
-            if (zombie.transform.parent == gameObject.transform)
-            {
-
-                // TODO : 좀비 주변에서 생성할것
-
-
-                zombie.SetActive(true);
-                zombie.transform.position = new Vector3(Random.Range(-groundLength, groundLength), 2f,
-                                                       Random.Range(-groundLength, groundLength))
-                    + transform.position;
-                zombie.transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
-
-                _zombieList.Add(zombie);
-
-                zombie.GetComponent<enemyZombie>().ResetZombie();
-
-            }
-        }
-        */
-
-
-        //set game start value
     }
 
     /// <summary>
@@ -183,14 +130,6 @@ public class zombieGround : Area {
             //zombie.GetComponent<enemyZombie>().InitializeZombie();
             _zombieList.Add(zombie);
 
-
-            // request from object mgr
-            /*
-            agentArr[i].transform.position = initPos;
-            agentArr[i].transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
-
-            _playerAgentList.Add(agentArr[i]);
-            */
         }
 
         _prev_GenerateZombieTime = Time.time;
@@ -199,7 +138,6 @@ public class zombieGround : Area {
 
 
         Debug.Log("ZOMZOMZOM = " + _zombieList.Count);
-
         //Debug.Log("[Reset GROUND CALLED !!!] agentCount = {}" + _playerAgentList.Count + " , zombie = {}" + _zombieList.Count);
     }
 
@@ -235,7 +173,8 @@ public class zombieGround : Area {
         Debug.Log("[Before] zombieCount ] = " + _zombieList.Count);
 
         //TODO : FREE obj
-        zombieObj.SetActive(false); // 이거만 해도 되는건가??
+        //zombieObj.SetActive(false); // 이거만 해도 되는건가??
+        ObjectManager.instance.Free(zombieObj, ObjType.zombie);
         _zombieList.Remove(zombieObj);
 
         Debug.Log("[After] zombieCount ] = " + _zombieList.Count);
@@ -253,8 +192,6 @@ public class zombieGround : Area {
 
     void GenerateZombie()
     {
-
-
         //더많이 생성???
         for (int i = 0; i < InfoScript.instance.initZombieNum; ++i)
         {
@@ -267,14 +204,17 @@ public class zombieGround : Area {
             zombie.transform.parent = transform;
 
             //TODO : 이걸 어케 생성하냐에 따라 버그가 생기고 안생긴다..
-            zombie.GetComponent<enemyZombie>().InitializeZombie();
+            //var zombieScript = zombie.transform.GetComponent<enemyZombie>();
+            //zombieScript.InitializeZombie();
 
-            _zombieList.Add(zombie);
+            _zombieList.Add(zombie.gameObject);
         }
 
         // todo : 모퉁이에서 생성
 
         _prev_GenerateZombieTime = Time.time;
+        Debug.LogWarning("*&*&*&*& _prevGenTime *&*&* = " + _prev_GenerateZombieTime);
+
     }
 
     bool GameEndCheck()

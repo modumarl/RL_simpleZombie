@@ -35,7 +35,20 @@ public class ObjectManager : MonoBehaviour
     // public functions
     public GameObject Assign(ObjType objType, Vector3 initPos)
     {
-        return poolList[objType].Assign(initPos);
+        if (objType == ObjType.zombie)
+        {
+            GameObject zombieObj = poolList[objType].Assign(initPos);
+            //zombieObj.transform.GetComponent<enemyZombie>().InitializeZombie();
+
+            return zombieObj;
+        }
+
+        else
+        {
+            return poolList[objType].Assign(initPos);
+        }
+
+
     }
 
     //public void FreeAllObj(battleObjectType objType)
@@ -44,15 +57,17 @@ public class ObjectManager : MonoBehaviour
         poolList[objType].FreeAll();
     }
 
-    /*
-    public void Free(GameObject obj)
+    public void Free(GameObject obj, ObjType objType)
     {
         if (!obj.activeSelf) return;
 
         int idx = obj.name.IndexOf('_');
         var key = obj.name.Remove(idx);
-        poolList[key].Free(obj);
+        obj.transform.parent = transform;
+        poolList[objType].Free(obj);
     }
+
+    /*
 
     public void FreeAll()
     {

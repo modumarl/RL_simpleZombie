@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class enemyZombie : MonoBehaviour {
 
-    public InfoScript infoScript;
-
     float _moveSpeed;
     float _turnSpeed;
     float _hitDmg;
@@ -36,14 +34,18 @@ public class enemyZombie : MonoBehaviour {
      
     ///////////////////////////////////////////////////////////
 
-	void Start ()
+	void Awake ()
     {
         zombieRB = GetComponent<Rigidbody>();
         _renderer = GetComponent<MeshRenderer>();
 
-        InitializeZombie();
+        //InitializeZombie();
     }
 
+    private void OnEnable()
+    {
+        InitializeZombie();
+    }
 
     private void FixedUpdate()
     {
@@ -57,7 +59,7 @@ public class enemyZombie : MonoBehaviour {
 
     void SetZombieInitValue()
     {
-        infoScript = InfoScript.instance;
+        InfoScript infoScript = InfoScript.instance;
         _moveSpeed = infoScript.moveSpeed_zombie;
         _turnSpeed = infoScript.turnDegree_zombie;
         _hitDmg = infoScript.dmg_zombie;
@@ -80,8 +82,6 @@ public class enemyZombie : MonoBehaviour {
 
     public bool UpdateDamage_isDead(float recevDmg)
     {
-        Debug.LogWarning("Zombie HIT!!");
-
         if (_isDead == true)
         {
             Debug.LogError("[Zombie HP ]smth WRONG!!!");
