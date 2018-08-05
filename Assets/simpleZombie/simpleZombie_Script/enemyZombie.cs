@@ -120,15 +120,15 @@ public class enemyZombie : MonoBehaviour {
         GameObject target = null;
         float minDist = float.MaxValue;
 
-        for (int i=0; i< zombieGroundInst._playerAgentList.Count; ++i)
+        for (int i=0; i< zombieGroundInst.liveAgentList.Count; ++i)
         {
             // 만약 죽어 null 이면 return 
 
-            var dist = Vector3.Distance(zombieGroundInst._playerAgentList[i].transform.position, transform.position);
+            var dist = Vector3.Distance(zombieGroundInst.liveAgentList[i].transform.position, transform.position);
 
-            if ( dist < minDist && zombieGroundInst._playerAgentList[i].activeSelf == true)
+            if ( dist < minDist && zombieGroundInst.liveAgentList[i].activeSelf == true)
             {
-                target = zombieGroundInst._playerAgentList[i];
+                target = zombieGroundInst.liveAgentList[i];
                 minDist = dist;
             }
         }

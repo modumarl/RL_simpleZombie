@@ -32,15 +32,24 @@ public class zombieGround : Area {
 
 
     [HideInInspector]
-    public List<GameObject> _playerAgentList = new List<GameObject>();
+    List<GameObject> _playerAgentList = new List<GameObject>();
+    List<GameObject> _liveAgentList = new List<GameObject>();
+
+    public List<GameObject> liveAgentList
+    {
+        get { return _liveAgentList; }
+    }
+
 
     [HideInInspector]
-    public List<GameObject> _zombieList = new List<GameObject>();
+    List<GameObject> _zombieList = new List<GameObject>();
+
+    
 
 
 
     float _prev_GenerateZombieTime;
-
+    bool _setAgentList = false;
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +87,7 @@ public class zombieGround : Area {
     }
     */
 
-    void ReseetEpisodeReward()
+    void ResetEpisodeReward()
     {
         _episodeReward = 0;
         _episodeStartTime = Time.time;
@@ -88,11 +97,18 @@ public class zombieGround : Area {
     //////////////////////////////////////////
     //public void ResetGround(GameObject[] playerAgentList, GameObject[] zombieList)
 
-    public void ResetGroundValue()
+    public void ClearGround()
     {
-        ReseetEpisodeReward();
+        ResetEpisodeReward();
 
-        _playerAgentList.Clear();
+        
+        for (int i=0; i< _zombieList.Count; ++i)
+        {
+            _zombieList[i].transform.parent = ObjectManager.instance.gameObject.transform;
+            _zombieList[i].SetActive(false);
+        }
+
+        _liveAgentList.Clear();
         _zombieList.Clear();
     }
 
@@ -101,22 +117,36 @@ public class zombieGround : Area {
     /// </summary>
     public void SetGameStartGround()
     {
-        var agentArr = GameObject.FindGameObjectsWithTag("playerAgent");
-
-        for (int i = 0; i < agentArr.Length; ++i)
+        if(_setAgentList == false)
         {
-            Vector3 initPos = transform.position;
-            initPos.x += Random.Range(-1 * centerRandomness, centerRandomness);
-            initPos.z += Random.Range(-1 * centerRandomness, centerRandomness);
-            //initPos.y += 1f;
+            var agentArr = GameObject.FindGameObjectsWithTag("playerAgent");
 
-            agentArr[i].transform.position = initPos;
-            agentArr[i].transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
-            agentArr[i].gameObject.SetActive(true);
+            for (int i = 0; i < agentArr.Length; ++i)
+            {
+                Vector3 initPos = transform.position;
+                initPos.x += Random.Range(-1 * centerRandomness, centerRandomness);
+                initPos.z += Random.Range(-1 * centerRandomness, centerRandomness);
+                //initPos.y += 1f;
 
-            _playerAgentList.Add(agentArr[i]);
+                agentArr[i].transform.position = initPos;
+                agentArr[i].transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
+                agentArr[i].gameObject.SetActive(true);
 
+                _playerAgentList.Add(agentArr[i]);
+                _liveAgentList.Add(agentArr[i]);
+                _setAgentList = true;
+            }
         }
+        else
+        {
+            for (int i=0; i<_playerAgentList.Count; ++i)
+            {
+                _playerAgentList[i].SetActive(true);
+                _liveAgentList.Add(_playerAgentList[i]);
+            }
+        }
+
+
 
         for (int i = 0; i < InfoScript.instance.initZombieNum; ++i)
         {
@@ -146,14 +176,15 @@ public class zombieGround : Area {
     public void AgentDead(GameObject agentObj)
     {
         // list 관리 해주기 
-        _playerAgentList.Remove(agentObj);
+        //_playerAgentList.Remove(agentObj);
+        _liveAgentList.Remove(agentObj);
 
         // agent 수 보고 게임 체크 
         if (GameEndCheck() == true)
         {
             // reward 주고 
             // game reset
-
+            Debug.Log("IN GAME RESET");
             simpleZombieAcademy.instance.AcademyReset();
         }
 
@@ -223,9 +254,10 @@ public class zombieGround : Area {
 
         bool isGameEnd = false;
 
-        if (_playerAgentList.Count == 0 )
+        if (_liveAgentList.Count == 0 )
         {
             isGameEnd = true;
+            Debug.LogWarning("!!!!! Game END !!!!!");
         }
 
         return isGameEnd;

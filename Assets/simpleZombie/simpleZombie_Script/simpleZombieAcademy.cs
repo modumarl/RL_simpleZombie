@@ -42,7 +42,7 @@ public class simpleZombieAcademy : Academy
 
         for (int i = 0; i<groundList.Length; ++i )
         {
-            groundList[i].GetComponent<zombieGround>().ResetGroundValue();
+            groundList[i].GetComponent<zombieGround>().ClearGround();
             groundList[i].GetComponent<zombieGround>().SetGameStartGround();
         }
 
