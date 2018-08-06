@@ -44,10 +44,6 @@ public class zombieGround : Area {
     [HideInInspector]
     List<GameObject> _zombieList = new List<GameObject>();
 
-    
-
-
-
     float _prev_GenerateZombieTime;
     bool _setAgentList = false;
 
@@ -75,8 +71,10 @@ public class zombieGround : Area {
 
         if ( _isEpisodeStart == true && nexGenTime < Time.time )
         {
-            //GenerateZombie();
+            GenerateZombie();
         }
+
+        AddTeamReward(Time.deltaTime * InfoScript.instance.reward_gameTimePass);
     }
 
 
@@ -89,17 +87,15 @@ public class zombieGround : Area {
 
     void ResetEpisodeReward()
     {
-        _episodeReward = 0;
-        _episodeStartTime = Time.time;
+        //_episodeReward = 0;
+        //_episodeStartTime = Time.time;
     }
 
-
     //////////////////////////////////////////
-    //public void ResetGround(GameObject[] playerAgentList, GameObject[] zombieList)
 
     public void ClearGround()
     {
-        ResetEpisodeReward();
+        //ResetEpisodeReward();
 
         
         for (int i=0; i< _zombieList.Count; ++i)
@@ -146,8 +142,6 @@ public class zombieGround : Area {
             }
         }
 
-
-
         for (int i = 0; i < InfoScript.instance.initZombieNum; ++i)
         {
             Vector3 initPos = transform.position;
@@ -160,13 +154,11 @@ public class zombieGround : Area {
             zombie.transform.parent = transform;
             //zombie.GetComponent<enemyZombie>().InitializeZombie();
             _zombieList.Add(zombie);
-
         }
 
         _prev_GenerateZombieTime = Time.time;
         _episodeStartTime = Time.time;
         _isEpisodeStart = true;
-
 
         Debug.Log("ZOMZOMZOM = " + _zombieList.Count);
         //Debug.Log("[Reset GROUND CALLED !!!] agentCount = {}" + _playerAgentList.Count + " , zombie = {}" + _zombieList.Count);
@@ -176,7 +168,6 @@ public class zombieGround : Area {
     public void AgentDead(GameObject agentObj)
     {
         // list 관리 해주기 
-        //_playerAgentList.Remove(agentObj);
         _liveAgentList.Remove(agentObj);
 
         // agent 수 보고 게임 체크 
@@ -218,9 +209,7 @@ public class zombieGround : Area {
         // 리스트에서 지우고 좀비 생성할지 말지 결정? 
     }
 
-
     /////////////////////////////////////////////////////////////////////////////////
-
 
     void GenerateZombie()
     {
@@ -257,10 +246,32 @@ public class zombieGround : Area {
         if (_liveAgentList.Count == 0 )
         {
             isGameEnd = true;
+
+            //AddTeamReward()  죽은 플레이어에게 add reward???
+
             Debug.LogWarning("!!!!! Game END !!!!!");
         }
 
         return isGameEnd;
+    }
+
+    void AddTeamReward(float reward)
+    {
+        for (int i=0; i<_liveAgentList.Count; ++i)
+        {
+            _liveAgentList[i].GetComponent<playerAgent>().AddReward(reward);
+        }
+    }
+
+    void AddTeamReward(GameObject exceptObj, float reward)
+    {
+        for (int i=0; i<_liveAgentList.Count; ++i)
+        {
+            if (_liveAgentList[i].GetInstanceID() != exceptObj.GetInstanceID())
+            {
+                _liveAgentList[i].GetComponent<playerAgent>().AddReward(reward);
+            }
+        }
     }
 
 }

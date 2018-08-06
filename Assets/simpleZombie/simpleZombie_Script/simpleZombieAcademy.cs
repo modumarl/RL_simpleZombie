@@ -38,7 +38,7 @@ public class simpleZombieAcademy : Academy
 
         // TODO : 이런건 어디서??
         // ObjectManager.instance.FreeAllObj(ObjectType.missile);
-
+        
 
         for (int i = 0; i<groundList.Length; ++i )
         {

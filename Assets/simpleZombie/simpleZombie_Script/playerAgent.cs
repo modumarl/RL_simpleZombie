@@ -32,6 +32,7 @@ public class playerAgent : Agent
 
     int _hitCall = 0;
 
+    
 
     //////*imported value*//////
     float _moveSpeed;
@@ -73,10 +74,8 @@ public class playerAgent : Agent
 
     public override void CollectObservations()
     {
-
         //_rayAngle = infoScript.rayAngle_agent;
         //Debug.Log(_rayAngle);
-
 
         // --- just for use Loop --------
         PerceiveZombie();
@@ -247,12 +246,15 @@ public class playerAgent : Agent
         {
             _hp -= inputDmg;
             _renderer.material = infoScript.GetHP_Material(true, _hp);
+            AddReward(InfoScript.instance.reward_receiveDamage);
         }
 
         else
         {
             _hp = 0;
             _curState = AgentState.dead;
+            AddReward(InfoScript.instance.reward_agentDeath);
+
             this.gameObject.SetActive(false);
             zombieGround.instance.AgentDead(this.gameObject);
         }
@@ -283,7 +285,6 @@ public class playerAgent : Agent
         Debug.Log("shot excute = " + _hitCall);
 
         GameObject targetZombie = null ;
-        bool doShot = false;
         bool isTarget_minimumHP;
         
 
@@ -324,10 +325,13 @@ public class playerAgent : Agent
             {
                 _targetZombie_nearest = null;
             }
+
+            AddReward(InfoScript.instance.reward_kill);
         }
         else // 죽지는 않음
         {
             //TODO : setReward
+            AddReward(InfoScript.instance.reward_shot);
         }
 
         // manage DPS;

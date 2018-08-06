@@ -20,10 +20,6 @@ public class InfoScript : MonoBehaviour  {
     public float dmg_playerAgent = 20;
     public float dmg_zombie = 10;
 
-    public float Reward_to_Shooter = 30f;
-    public float Reward_to_Team = 10f;
-
-
 
     public float shotCoolTime_playerAgent = 2f;
     public float coolTime_zombie = 0.5f;
@@ -34,9 +30,18 @@ public class InfoScript : MonoBehaviour  {
     public Material[] agentHpMat;
     public Material[] zombieHpMat;
 
+    public float reward_kill = 50f;
+    public float reward_shot = 10f;
+    public float reward_gameTimePass = 1f;
+    public float reward_receiveDamage = -20f;
+    public float reward_agentDeath = -100f;
+    public float reward_episodeEnd = -250f;
+    
+
     int _agentMatCount;
     int _zombieMatCount;
 
+    ////////////////////////////////////////////////////////////////////////////////
 
     void Awake()
     {
