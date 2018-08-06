@@ -64,7 +64,7 @@ public class playerAgent : Agent
         _renderer.material = infoScript.GetHP_Material(false, _hp);
 
         _shotCoolTime = infoScript.shotCoolTime_playerAgent;
-
+        _curState = AgentState.shotReady;
 
         ResetAgentValue();
     }
@@ -234,6 +234,7 @@ public class playerAgent : Agent
         // TODO : SendReward
 
         UpdateHp(inputDmg);
+        Debug.Log(_curState + " curHP = " + _hp);
     }
     void UpdateHp(float inputDmg)
     {

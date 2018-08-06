@@ -171,6 +171,8 @@ public class enemyZombie : MonoBehaviour {
         }
         _targetAgent.GetComponent<playerAgent>().AttackByZombie(_hitDmg);
         _prevAttackTime = Time.time;
+
+        Debug.Log("ATTACK CALLED!");
     }
 
 }
