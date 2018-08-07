@@ -247,9 +247,17 @@ public class zombieGround : Area {
         {
             isGameEnd = true;
 
-            //AddTeamReward()  죽은 플레이어에게 add reward???
+            AddTeamReward(InfoScript.instance.reward_episiodeWin);
 
-            Debug.LogWarning("!!!!! Game END !!!!!");
+            Debug.LogWarning("!!!!! Game END = Agent WIN !!!!!");
+        }
+
+        if(_zombieList.Count == 0)
+        {
+            isGameEnd = true;
+            AddTeamReward(InfoScript.instance.reward_episodeLose);
+
+            Debug.LogWarning("!!!!! Game END = Agent LoSE !!!!!");
         }
 
         return isGameEnd;

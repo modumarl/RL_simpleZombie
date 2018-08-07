@@ -35,7 +35,8 @@ public class InfoScript : MonoBehaviour  {
     public float reward_gameTimePass = 1f;
     public float reward_receiveDamage = -20f;
     public float reward_agentDeath = -100f;
-    public float reward_episodeEnd = -250f;
+    public float reward_episiodeWin = 250f;
+    public float reward_episodeLose = -250f;
     
 
     int _agentMatCount;
