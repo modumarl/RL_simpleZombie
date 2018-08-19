@@ -10,6 +10,10 @@ public class playerAgent : Agent
     GameObject _targetZombie_nearest;
     GameObject _targetZombie_minimumHP;
 
+    public LineRenderer lineR_minimumHp;
+    public LineRenderer lineR_nearst;
+
+
     // ****** TODO ******
     // heading Vector
     // Type입력하면 바뀌어서 능력치 
@@ -83,6 +87,7 @@ public class playerAgent : Agent
         if(_perceiveZombieList.Count !=0)
         {
             SetTarget();
+            SetLineRenderer();
         }
 
         SetState();
@@ -351,6 +356,29 @@ public class playerAgent : Agent
         //totalAttackPoint = 0;
 
         this.gameObject.SetActive(true);
+    }
+
+    void SetLineRenderer()
+    {
+        if (_targetZombie_minimumHP == null)
+        {
+            Debug.LogWarning("TARGET NULL!!!!");
+            lineR_minimumHp.SetPosition(0, this.gameObject.transform.position);
+            lineR_minimumHp.SetPosition(1, this.gameObject.transform.position);
+            //lineR_minimumHp.enabled = false;
+            //lineR_minimumHp.set
+        }
+
+        else if(_targetZombie_minimumHP != null)
+        {
+            //lineR_minimumHp.enabled = true;
+            lineR_minimumHp.SetPosition(0,this.gameObject.transform.position);
+            lineR_minimumHp.SetPosition(1, _targetZombie_minimumHP.transform.position);
+
+        }
+
+
+        
     }
 
 }
