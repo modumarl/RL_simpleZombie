@@ -130,6 +130,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4065366961764956, guid: 53944770149ca8b4ba844d561155668a,
     type: 2}
   m_PrefabInternal: {fileID: 204033665}
+--- !u!114 &197130485 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114837750298717376, guid: 53944770149ca8b4ba844d561155668a,
+    type: 2}
+  m_PrefabInternal: {fileID: 204033665}
+  m_Script: {fileID: 11500000, guid: 1019e9a2196c8934c9951605788dda42, type: 3}
 --- !u!1001 &204033665
 Prefab:
   m_ObjectHideFlags: 0
@@ -585,6 +591,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   infoScript: {fileID: 1512458133}
+  aroundZombieList: []
   lineR_minimumHp: {fileID: 0}
   lineR_nearst: {fileID: 0}
 --- !u!114 &330692647
@@ -1029,6 +1036,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bb118e16d35a8943aefddb32329321e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerAgent: {fileID: 197130485}
+  listCount: 0
 --- !u!1 &518860503
 GameObject:
   m_ObjectHideFlags: 0
@@ -3112,6 +3121,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   infoScript: {fileID: 1512458133}
+  aroundZombieList: []
   lineR_minimumHp: {fileID: 0}
   lineR_nearst: {fileID: 0}
 --- !u!114 &1949188002

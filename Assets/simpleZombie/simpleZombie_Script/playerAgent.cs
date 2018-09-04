@@ -6,7 +6,11 @@ public class playerAgent : Agent
 {
     public InfoScript infoScript;
 
-    List<GameObject> _perceiveZombieList = new List<GameObject>();
+    //List<GameObject> _perceiveZombieList = new List<GameObject>();
+
+    [HideInInspector]
+    public List<GameObject> aroundZombieList = new List<GameObject>();
+
     GameObject _targetZombie_nearest;
     GameObject _targetZombie_minimumHP;
 
@@ -82,9 +86,10 @@ public class playerAgent : Agent
         //Debug.Log(_rayAngle);
 
         // --- just for use Loop --------
-        PerceiveZombie();
+        //PerceiveZombie();
 
-        if(_perceiveZombieList.Count !=0)
+        //if(_perceiveZombieList.Count !=0)
+        if(aroundZombieList.Count != 0)
         {
             SetTarget();
             SetLineRenderer();
@@ -108,7 +113,8 @@ public class playerAgent : Agent
 
         //todo 
         // nearZombieList 관련한 정보값
-        AddVectorObs(_perceiveZombieList.Count);
+        //AddVectorObs(_perceiveZombieList.Count);
+        AddVectorObs(aroundZombieList.Count);
 
         //hp가 일정치 이하인 좀비의 카운트?
 
@@ -192,7 +198,7 @@ public class playerAgent : Agent
 
     void PerceiveZombie()
     {
-        _perceiveZombieList = _rayPercept.PerceiveObjectList(_rayDistance, _rayAngle, "zombie", 0f, 0f);
+        //_perceiveZombieList = _rayPercept.PerceiveObjectList(_rayDistance, _rayAngle, "zombie", 0f, 0f);
 
         //Debug.LogWarning("listCount = " + _perceiveZombieList.Count);
         //for (int i = 0; i < _perceiveZombieList.Count; ++i)
@@ -202,30 +208,41 @@ public class playerAgent : Agent
     }
     void SetTarget()
     {
-        if(_perceiveZombieList.Count == 0)
+        //if(_perceiveZombieList.Count == 0)
+        if(aroundZombieList.Count  == 0)
         {
             return;
         }
 
-        _targetZombie_minimumHP = _perceiveZombieList[0];
-        _targetZombie_nearest = _perceiveZombieList[0];
+        //_targetZombie_minimumHP = _perceiveZombieList[0];
+        //_targetZombie_nearest = _perceiveZombieList[0];
+        _targetZombie_minimumHP = aroundZombieList[0];
+        _targetZombie_nearest = aroundZombieList[0];
 
         var minHp = _targetZombie_minimumHP.GetComponent<enemyZombie>().hp;
         var minDist = Vector3.Distance(_targetZombie_nearest.transform.position, transform.position);
 
-        for (int i=0; i<_perceiveZombieList.Count; ++i)
+        //for (int i=0; i<_perceiveZombieList.Count; ++i)
+        for(int i = 0; i< aroundZombieList.Count; ++i)
         {
-            var thisZombieHp = _perceiveZombieList[i].GetComponent<enemyZombie>().hp;
+            //var thisZombieHp = _perceiveZombieList[i].GetComponent<enemyZombie>().hp;
+            var thisZombieHp = aroundZombieList[i].GetComponent<enemyZombie>().hp;
+
             if (minHp > thisZombieHp)
             {
-                _targetZombie_minimumHP = _perceiveZombieList[i];
+                //_targetZombie_minimumHP = _perceiveZombieList[i];
+                _targetZombie_minimumHP = aroundZombieList[i];
                 minHp = thisZombieHp;
             }
 
-            float thisZombieDist = Vector3.Distance(_perceiveZombieList[i].transform.position, transform.position);
+            //float thisZombieDist = Vector3.Distance(_perceiveZombieList[i].transform.position, transform.position);
+            float thisZombieDist = Vector3.Distance(aroundZombieList[i].transform.position, transform.position);
+
             if (minDist > thisZombieDist)
             {
-                _targetZombie_nearest = _perceiveZombieList[i];
+                //_targetZombie_nearest = _perceiveZombieList[i];
+                _targetZombie_nearest = aroundZombieList[i];
+
                 minDist = thisZombieDist;
             }
         }

@@ -149,15 +149,10 @@ public class playerAgent : Agent
     }
 
     ////////////////////////////////////////////////////////////////////////////////
-
-
     void Start()
     {
 
     }
-
-
-
 
     ////////////////////////////////////////////////////////////////////////////////
 
@@ -168,18 +163,12 @@ public class playerAgent : Agent
         UpdateHp(inputDmg);
     }
 
-
-
-
-
-
     void UpdateHp(int inputDmg)
     {
         if(_curState == AgentState.dead)
         {
             return;
         }
-
 
         if(_hp > inputDmg)
         {
@@ -192,7 +181,6 @@ public class playerAgent : Agent
             _curState = AgentState.dead;
         }
     }
-
 
     void SetState()
     {
@@ -212,8 +200,6 @@ public class playerAgent : Agent
         //set targetZombie
 
         // 일단은 제일 hp가 적은 좀비위주로 함
-
-
 
 
     }
