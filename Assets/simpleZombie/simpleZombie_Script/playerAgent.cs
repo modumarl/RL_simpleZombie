@@ -40,9 +40,12 @@ public class playerAgent : Agent
 
     int _hitCall = 0;
 
-    
+
 
     //////*imported value*//////
+    float _shotRange;
+    float _shotDegree;
+
     float _moveSpeed;
     float _turnDegree;
     float _rayDistance;
@@ -67,6 +70,9 @@ public class playerAgent : Agent
         _moveSpeed = infoScript.moveSpeed_playerAgent;
         _turnDegree = infoScript.turnDegree_playerAgent;
         _rayDistance = infoScript.rayDistacne_agent;
+        _shotDegree = infoScript.shotDegree;
+        _shotRange = infoScript.shotRange;
+
         _hitDmg = infoScript.dmg_playerAgent;
         //_rayAngle = infoScript.rayAngle_agent;
         _hp = infoScript.fullHp_playerAgent;
@@ -298,11 +304,12 @@ public class playerAgent : Agent
 
     void Shot(bool shotMinHP)
     {
+        // check curState
         if (_curState != AgentState.shotReady)
         {
             return;
         }
-
+                     
         _hitCall++;
         Debug.Log("shot excute = " + _hitCall);
 
@@ -324,6 +331,12 @@ public class playerAgent : Agent
 
         // TODO : Target ZOmbie가 null 일떄 처리...
         if (targetZombie == null || targetZombie.GetComponent<enemyZombie>().isDead == true)
+        {
+            return;
+        }
+
+        // check shot Range
+        if (CanShotTarget(targetZombie) == false)
         {
             return;
         }
@@ -363,6 +376,26 @@ public class playerAgent : Agent
         // TODO : particle mgr 요청
     }
 
+    bool CanShotTarget(GameObject targetObj)
+    {
+        bool canShotObj = true;
+
+        // 1. check shot range
+        var dist = Vector3.Distance(targetObj.transform.position, transform.position);
+        if (dist > _shotRange)
+        {
+            return false;
+        }
+
+        // 2. check shot degree
+        // cosine 으로 정의 !
+
+
+
+        return canShotObj;
+    }
+
+
     void ResetAgentValue()
     {
         // curState
@@ -394,8 +427,6 @@ public class playerAgent : Agent
 
         }
 
-
-        
     }
 
 }

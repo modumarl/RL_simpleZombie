@@ -20,6 +20,8 @@ public class InfoScript : MonoBehaviour  {
     public float dmg_playerAgent = 20;
     public float dmg_zombie = 10;
 
+    public float shotRange = 5f;
+    public float shotDegree = 70f;
 
     public float shotCoolTime_playerAgent = 2f;
     public float coolTime_zombie = 0.5f;
