@@ -44,7 +44,7 @@ public class playerAgent : Agent
 
     //////*imported value*//////
     float _shotRange;
-    float _shotDegree;
+    float _shotAngle;
 
     float _moveSpeed;
     float _turnDegree;
@@ -70,7 +70,7 @@ public class playerAgent : Agent
         _moveSpeed = infoScript.moveSpeed_playerAgent;
         _turnDegree = infoScript.turnDegree_playerAgent;
         _rayDistance = infoScript.rayDistacne_agent;
-        _shotDegree = infoScript.shotDegree;
+        _shotAngle = infoScript.shotDegree;
         _shotRange = infoScript.shotRange;
 
         _hitDmg = infoScript.dmg_playerAgent;
@@ -103,6 +103,7 @@ public class playerAgent : Agent
 
         SetState();
 
+        DrawView();
         //--------------------------------
 
 
@@ -389,12 +390,58 @@ public class playerAgent : Agent
 
         // 2. check shot degree
         // cosine 으로 정의 !
+        Vector3 forwardVec = transform.forward;
+        Debug.LogWarning("forward vec = " + forwardVec);
+
+
+
+        Vector3 dirToTarget = (targetObj.transform.position - transform.position).normalized;
+
+        //_transform.forward와 dirToTarget은 모두 단위벡터이므로 내적값은 두 벡터가 이루는 각의 Cos값과 같다.
+        //내적값이 시야각/2의 Cos값보다 크면 시야에 들어온 것이다.
+        if (Vector3.Dot(transform.forward, dirToTarget) > Mathf.Cos((_shotAngle / 2) * Mathf.Deg2Rad))
+        //if (Vector3.Angle(_transform.forward, dirToTarget) < ViewAngle/2)
+        {
+            Debug.LogWarning("can SHOT!!@!@!@!@!@!@!@!@!@!@");
+
+
+            float distToTarget = Vector3.Distance(transform.position, targetObj.transform.position);
+
+            
+            /*
+            if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, ObstacleMask))
+            {
+                Debug.DrawLine(transform.position, target.position, Color.red);
+            }
+            */
+            
+        }
 
 
 
         return canShotObj;
     }
+    /////
+    public Vector3 DirFromAngle(float angleInDegrees)
+    {
+        //agent의 좌우 회전값 갱신
+        angleInDegrees += transform.eulerAngles.y;
+        //경계 벡터값 반환
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
 
+    public void DrawView()
+    {
+        Vector3 leftBoundary = DirFromAngle(_shotAngle / 2);
+        Vector3 rightBoundary = DirFromAngle(_shotAngle / 2);
+        Debug.DrawLine(transform.position, transform.position + leftBoundary * _shotRange, Color.blue);
+        Debug.DrawLine(transform.position, transform.position + rightBoundary * _shotRange, Color.blue);
+
+        //DrawLine(transform.position, transform.position + leftBoundary * _shotRange, Color.blue);
+        //DrawLine(transform.position, transform.position + rightBoundary * _shotRange, Color.blue);
+    }
+
+    /////////
 
     void ResetAgentValue()
     {

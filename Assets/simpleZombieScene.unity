@@ -2507,6 +2507,8 @@ MonoBehaviour:
   fullHp_zombie: 60
   dmg_playerAgent: 20
   dmg_zombie: 10
+  shotRange: 10
+  shotDegree: 70
   shotCoolTime_playerAgent: 1
   coolTime_zombie: 1
   rayDistacne_agent: 40
